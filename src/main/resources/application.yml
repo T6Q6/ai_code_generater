@@ -1,0 +1,95 @@
+spring:
+  # session 配置
+  session:
+    store-type: redis
+    # session 30天过期
+    timeout: 2592000
+  application:
+    name: ai-code-generate
+  profiles:
+    active: prod
+  datasource:
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    driver-class-name: ${spring.datasource.driver-class-name}
+    url: ${spring.datasource.url}
+  # redis
+  data:
+    redis:
+      host: ${spring.data.redis.host}
+      port: ${spring.data.redis.port}
+      password: ${spring.datasource.password}
+      ttl: ${spring.data.redis.ttl}
+      database: ${spring.data.redis.database}
+
+server:
+  port: 8124
+  servlet:
+    context-path: /api
+
+# Knife4j ??
+springdoc:
+  group-configs:
+    - group: 'default'
+      packages-to-scan: com.sct.aicodegenerate.controller
+# knife4j???????????????
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# AI
+langchain4j:
+  openai:
+    streaming-chat-model:
+      base-url: https://api.deepseek.com
+      api-key: ${ai.api-key}
+      model-name: deepseek-chat
+      log-requests: true
+      log-responses: true
+      max-tokens: 8192
+    chat-model:
+      base-url: https://api.deepseek.com
+      api-key: ${ai.api-key}
+      model-name: deepseek-chat
+      log-requests: true
+      log-responses: true
+#      strict-json-schema: true
+#      response-format: json_object
+      max-tokens: 8192
+      # 重试次数（默认是2）
+#      max-retries: 3
+    # 推理 AI 模型配置（用于复杂的推理任务）
+    reasoning-streaming-chat-model:
+      base-url: https://api.deepseek.com
+      api-key: ${ai.api-key}
+      model-name: deepseek-reasoner
+      max-tokens: 32768
+      temperature: 0.1
+      log-requests: true
+      log-responses: true
+    # 智能路由 AI 模型配置（用于简单的分类任务）
+    routing-chat-model:
+      base-url: https://api.deepseek.com
+      api-key: ${ai.api-key}
+      model-name: deepseek-chat
+      log-requests: true
+      log-responses: true
+
+
+# 添加 COS 对象存储配置
+cos:
+  client:
+    host: ${cos.host}
+    secretId: ${cos.secretId}
+    secretKey: ${cos.secretKey}
+    bucket: ${cos.bucket}
+    region: ${cos.region}
+# Pexels 图片搜索配置
+pexels:
+  api-key: ${pexels.api-key}
+dashscope:
+  api-key: ${dashscope.api-key}
+  model: ${dashscope.image-model}
+
+
