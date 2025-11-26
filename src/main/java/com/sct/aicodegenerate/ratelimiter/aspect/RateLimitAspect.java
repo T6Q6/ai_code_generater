@@ -38,9 +38,17 @@ public class RateLimitAspect {
         String key = generateRateLimitKey(point, rateLimit);
         // 使用Redisson的分布式限流器
         RRateLimiter rateLimiter = redissonClient.getRateLimiter(key);
-        rateLimiter.expire(Duration.ofHours(1));
-        // 设置限流参数
-        rateLimiter.trySetRate(RateType.OVERALL, rateLimit.rate(), rateLimit.rateInterval(), RateIntervalUnit.SECONDS);
+//        rateLimiter.expire(Duration.ofHours(1));
+        // 初始化（仅第一次调用时执行）
+        if (!rateLimiter.isExists()) {
+            rateLimiter.trySetRate(
+                    RateType.OVERALL,
+                    rateLimit.rate(),
+                    rateLimit.rateInterval(),
+                    RateIntervalUnit.SECONDS
+            );
+            rateLimiter.expire(Duration.ofHours(1));
+        }
         // 尝试获取令牌，如果获取失败则抛出异常
         if (!rateLimiter.tryAcquire()){
             throw new BusinessException(ErrorCode.TOO_MANY_REQUEST,rateLimit.message());

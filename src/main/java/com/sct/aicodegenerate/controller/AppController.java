@@ -306,6 +306,7 @@ public class AppController {
      * 下载应用代码
      */
     @GetMapping("/download/{appId}")
+    @Operation(summary = "下载应用代码")
     public void downloadAppCode(@PathVariable("appId") Long appId,
             HttpServletRequest request,
             HttpServletResponse response){

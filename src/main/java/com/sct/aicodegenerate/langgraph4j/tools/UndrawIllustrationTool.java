@@ -10,6 +10,9 @@ import com.sct.aicodegenerate.langgraph4j.state.ImageResource;
 import dev.langchain4j.agent.tool.Tool;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,10 +26,11 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@ConfigurationProperties(prefix = "pexels")
 public class UndrawIllustrationTool {
 
     // 替换为你的 Pixabay API Key
-    private static final String PIXABAY_API_KEY = "52757742-f7d869b54ca366bb3dc5cc9e9";
+    private String apiKey;
     // 图片搜索接口地址
     private static final String IMAGE_SEARCH_URL = "https://pixabay.com/api/";
 
@@ -41,7 +45,7 @@ public class UndrawIllustrationTool {
 
         List<ImageResource> imageResources = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
-        params.put("key", PIXABAY_API_KEY);
+        params.put("key", apiKey);
         params.put("q", query);
         params.put("perPage", 1);
         params.put("safesearch", "true");
